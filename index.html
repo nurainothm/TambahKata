@@ -305,14 +305,15 @@
       { id: 20, word: "adik", category: "Ahli Keluarga", distractor: "kakak" }
     ];
 
-    // DEFAULT IMAGE MAP (High Quality Visuals)
+    // DEFAULT IMAGE MAP (Gambar 'makan' telah ditukar kepada orang sedang makan kek)
     const defaultImageMap = {
       "bola": "https://images.unsplash.com/photo-1614632537197-38a17061c2bd?auto=format&fit=crop&w=600&q=80",
       "buku": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
       "kereta": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=600&q=80",
       "epal": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=600&q=80",
       "kasut": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80",
-      "makan": "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&w=600&q=80",
+      // Gambar Makan: Orang/kanak-kanak sedang makan kek dengan jelas
+      "makan": "https://images.unsplash.com/photo-1535141192574-5d4897c13136?auto=format&fit=crop&w=600&q=80",
       "minum": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
       "tidur": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=600&q=80",
       "mandi": "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=600&q=80",
@@ -668,7 +669,6 @@
       const reader = new FileReader();
       reader.onload = function(e) {
         const rawDataUrl = e.target.result;
-        // Crop & Resize via Canvas for optimal performance
         compressAndSaveImage(activeUploadKey, rawDataUrl);
       };
       reader.readAsDataURL(file);
@@ -681,7 +681,6 @@
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         
-        // Square crop / resize 500x500
         const targetSize = 500;
         canvas.width = targetSize;
         canvas.height = targetSize;
@@ -693,7 +692,6 @@
         ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, targetSize, targetSize);
         const processedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
 
-        // Save to LocalStorage
         const customImages = getCustomImages();
         customImages[wordKey] = processedDataUrl;
         try {
