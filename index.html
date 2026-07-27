@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TambahKata - Pembelajaran Bahasa Melayu</title>
+
+  <!-- Tailwind CSS & Canvas Confetti -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Google Fonts: Fredoka & FontAwesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Fredoka', cursive, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      background-color: #F0F9FF;
+    }
+    .btn-bounce:active {
+      transform: scale(0.92);
+    }
+    .floating-anim {
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    .pulse-ring {
+      animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+      70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+    .img-card-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: 1.5rem;
+    }
+    .img-card-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .img-card-container:hover img {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body class="bg-amber-50 text-slate-800 h-screen w-screen overflow-hidden flex flex-col justify-between">
+
+  <!-- TOP BAR / NAVIGATION -->
+  <header class="p-4 flex justify-between items-center bg-white/80 backdrop-blur border-b-4 border-amber-200 z-10">
+    <button onclick="goToHome()" class="btn-bounce bg-amber-400 text-white font-bold py-2 px-5 rounded-full text-xl shadow-md flex items-center gap-2 border-b-4 border-amber-600">
+      <i class="fa-solid fa-house"></i> Utama
+    </button>
+    <div class="flex items-center gap-2">
+      <span class="text-3xl">🔤</span>
+      <h1 class="text-2xl md:text-3xl font-extrabold text-amber-600 tracking-wide">TambahKata</h1>
+    </div>
+    <div id="stats-pill" class="hidden bg-sky-100 text-sky-800 px-4 py-1.5 rounded-full font-bold text-lg border-2 border-sky-300">
+      Soalan <span id="current-index">1</span> / <span id="total-items">20</span>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER WITH SCREENS -->
+  <main id="app-container" class="flex-1 relative overflow-y-auto p-4 flex flex-col justify-center items-center">
+    
+    <!-- 1. HOME SCREEN -->
+    <section id="screen-home" class="w-full max-w-2xl flex flex-col items-center gap-6 text-center">
+      <div class="bg-white p-6 rounded-3xl shadow-xl border-4 border-amber-300 w-full floating-anim flex flex-col items-center">
+        <div class="w-24 h-24 bg-amber-100 rounded-full flex items-center justify-center text-5xl mb-2 border-4 border-amber-300">
+          🗣️
+        </div>
+        <h2 class="text-3xl md:text-4xl font-extrabold text-sky-600 mb-1">TambahKata</h2>
+        <p class="text-slate-600 text-lg md:text-xl font-bold">Aplikasi Pembelajaran Kosa Kata Kanak-Kanak</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+        <!-- Menu Pemahaman -->
+        <button onclick="startActivity('pemahaman')" class="btn-bounce bg-emerald-400 hover:bg-emerald-500 text-white p-6 rounded-3xl shadow-lg border-b-8 border-emerald-600 flex flex-col items-center gap-3 group">
+          <div class="w-20 h-20 bg-white/30 rounded-full flex items-center justify-center text-4xl">
+            🟢
+          </div>
+          <span class="text-3xl font-extrabold tracking-wide">Pemahaman</span>
+          <span class="text-sm bg-emerald-600/40 px-3 py-1 rounded-full font-semibold">Dengar & Pilih Gambar</span>
+        </button>
+
+        <!-- Menu Ekspresif -->
+        <button onclick="startActivity('ekspresif')" class="btn-bounce bg-sky-400 hover:bg-sky-500 text-white p-6 rounded-3xl shadow-lg border-b-8 border-sky-600 flex flex-col items-center gap-3 group">
+          <div class="w-20 h-20 bg-white/30 rounded-full flex items-center justify-center text-4xl">
+            🔵
+          </div>
+          <span class="text-3xl font-extrabold tracking-wide">Ekspresif</span>
+          <span class="text-sm bg-sky-600/40 px-3 py-1 rounded-full font-semibold">Tengok Gambar & Sebut</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 2. PEMAHAMAN SCREEN -->
+    <section id="screen-pemahaman" class="hidden w-full max-w-3xl flex flex-col items-center gap-4">
+      <div class="bg-white px-6 py-4 rounded-2xl shadow-md border-2 border-emerald-200 flex items-center gap-3 w-full justify-center">
+        <button onclick="playInstructionAudio()" class="btn-bounce bg-emerald-500 text-white p-3 rounded-full shadow text-xl">
+          <i class="fa-solid fa-volume-high"></i>
+        </button>
+        <span id="pemahaman-prompt" class="text-2xl md:text-3xl font-extrabold text-emerald-800">"Mana..."</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full my-2">
+        <div id="option-a-card" onclick="checkPemahamanAnswer(0)" class="btn-bounce bg-white p-3 rounded-3xl shadow-xl border-4 border-slate-200 hover:border-emerald-400 cursor-pointer flex flex-col items-center justify-center transition-all h-64 md:h-72">
+          <div id="option-a-img" class="img-card-container"></div>
+        </div>
+        <div id="option-b-card" onclick="checkPemahamanAnswer(1)" class="btn-bounce bg-white p-3 rounded-3xl shadow-xl border-4 border-slate-200 hover:border-emerald-400 cursor-pointer flex flex-col items-center justify-center transition-all h-64 md:h-72">
+          <div id="option-b-img" class="img-card-container"></div>
+        </div>
+      </div>
+
+      <button onclick="skipItem()" class="btn-bounce bg-slate-300 hover:bg-slate-400 text-slate-700 font-bold py-2 px-6 rounded-full text-lg shadow border-b-4 border-slate-400 flex items-center gap-2">
+        <span>SKIP</span> <i class="fa-solid fa-forward"></i>
+      </button>
+    </section>
+
+    <!-- 3. EKSPRESIF SCREEN -->
+    <section id="screen-ekspresif" class="hidden w-full max-w-xl flex flex-col items-center gap-4">
+      <div class="bg-white px-6 py-3 rounded-2xl shadow border-2 border-sky-200 flex items-center gap-3 w-full justify-center">
+        <button onclick="playInstructionAudio()" class="btn-bounce bg-sky-500 text-white p-2.5 rounded-full shadow text-lg">
+          <i class="fa-solid fa-volume-high"></i>
+        </button>
+        <span class="text-2xl md:text-3xl font-extrabold text-sky-800">"Apa ini?"</span>
+      </div>
+
+      <div class="bg-white p-4 rounded-3xl shadow-xl border-4 border-sky-300 w-full flex flex-col items-center">
+        <div id="ekspresif-img" class="w-64 h-64 md:w-72 md:h-72 img-card-container"></div>
+        <div id="speech-recognized-text" class="mt-2 text-xl font-bold text-sky-600 h-8"></div>
+      </div>
+
+      <!-- SPEECH / MANUAL CONTROL BUTTONS -->
+      <div class="w-full flex flex-col gap-3 items-center">
+        <button id="mic-btn" onclick="toggleSpeechRecognition()" class="btn-bounce bg-rose-500 text-white font-bold py-3 px-8 rounded-full text-xl shadow-lg border-b-4 border-rose-700 flex items-center gap-3">
+          <i class="fa-solid fa-microphone text-2xl"></i> <span id="mic-label">Tekan & Sebut</span>
+        </button>
+
+        <div class="flex gap-4 w-full justify-center mt-1">
+          <button onclick="evaluateEkspresif(false)" class="btn-bounce flex-1 bg-amber-400 text-white font-bold py-3 rounded-2xl text-xl shadow border-b-4 border-amber-600 flex justify-center items-center gap-2">
+            <i class="fa-solid fa-xmark"></i> Belum Betul
+          </button>
+          <button onclick="evaluateEkspresif(true)" class="btn-bounce flex-1 bg-emerald-500 text-white font-bold py-3 rounded-2xl text-xl shadow border-b-4 border-emerald-700 flex justify-center items-center gap-2">
+            <i class="fa-solid fa-check"></i> Betul
+          </button>
+        </div>
+      </div>
+
+      <button onclick="skipItem()" class="btn-bounce bg-slate-300 hover:bg-slate-400 text-slate-700 font-bold py-2 px-6 rounded-full text-lg shadow border-b-4 border-slate-400 flex items-center gap-2 mt-1">
+        <span>SKIP</span> <i class="fa-solid fa-forward"></i>
+      </button>
+    </section>
+
+    <!-- 4. END OF SESSION SCREEN -->
+    <section id="screen-summary" class="hidden w-full max-w-md flex flex-col items-center gap-6 text-center">
+      <div class="bg-white p-8 rounded-3xl shadow-2xl border-4 border-amber-300 w-full flex flex-col items-center gap-4">
+        <div class="text-6xl">🎉</div>
+        <h2 class="text-3xl font-extrabold text-amber-600">Tahniah!</h2>
+        <p class="text-slate-600 font-bold text-lg">Anda berjaya menyiapkan latihan TambahKata.</p>
+        
+        <div class="bg-amber-50 p-4 rounded-2xl w-full flex justify-around border-2 border-amber-200 my-2">
+          <div class="flex flex-col items-center">
+            <span class="text-slate-500 font-bold text-sm">Selesai</span>
+            <span id="summary-completed" class="text-3xl font-extrabold text-emerald-600">0</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <span class="text-slate-500 font-bold text-sm">Di-Skip</span>
+            <span id="summary-skipped" class="text-3xl font-extrabold text-amber-600">0</span>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-3 w-full">
+          <button onclick="restartActivity()" class="btn-bounce bg-emerald-500 text-white font-bold py-3 rounded-2xl text-xl shadow border-b-4 border-emerald-700 flex justify-center items-center gap-2">
+            <i class="fa-solid fa-rotate-right"></i> Main Lagi
+          </button>
+          <button onclick="goToHome()" class="btn-bounce bg-sky-500 text-white font-bold py-3 rounded-2xl text-xl shadow border-b-4 border-sky-700 flex justify-center items-center gap-2">
+            <i class="fa-solid fa-house"></i> Menu Utama
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FEEDBACK MODAL (POPUPS) -->
+  <div id="feedback-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden flex justify-center items-center z-50 p-4">
+    <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl border-4 flex flex-col items-center text-center gap-4 transition-all transform scale-100" id="feedback-card">
+      <div id="feedback-stars" class="text-4xl text-amber-400 tracking-wider">⭐⭐⭐⭐⭐</div>
+      <div id="feedback-title" class="text-3xl font-extrabold">Pandainya!</div>
+      <p id="feedback-subtitle" class="text-slate-600 font-bold text-lg"></p>
+      <button id="feedback-btn" onclick="closeFeedbackModal()" class="btn-bounce bg-amber-400 text-white font-bold py-2 px-8 rounded-full text-xl shadow border-b-4 border-amber-600">
+        Teruskan
+      </button>
+    </div>
+  </div>
+
+  <!-- FIREBASE INTEGRATION (Module) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBOTxKAfHXwQsDEGcv9VWvLerMQ4Z7ke_w",
+      authDomain: "tambahkata-138d3.firebaseapp.com",
+      databaseURL: "https://tambahkata-138d3-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "tambahkata-138d3",
+      storageBucket: "tambahkata-138d3.firebasestorage.app",
+      messagingSenderId: "767736875869",
+      appId: "1:767736875869:web:291618d1d93b9aa76f36b4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.saveSessionData = function(mode, completed, skipped) {
+      try {
+        push(ref(db, 'sessions'), {
+          mode: mode,
+          completedCount: completed,
+          skippedCount: skipped,
+          timestamp: new Date().toISOString()
+        });
+      } catch(e) {
+        console.log("Firebase sync skipped/offline.");
+      }
+    };
+  </script>
+
+  <!-- APPLICATION LOGIC & DATA -->
+  <script>
+    // DATA MODEL (JSON) - 20 ITEMS ACROSS 4 CATEGORIES
+    const dataset = [
+      { id: 1, word: "bola", category: "Kata Nama", distractor: "epal" },
+      { id: 2, word: "buku", category: "Kata Nama", distractor: "kereta" },
+      { id: 3, word: "kereta", category: "Kata Nama", distractor: "buku" },
+      { id: 4, word: "epal", category: "Kata Nama", distractor: "bola" },
+      { id: 5, word: "kasut", category: "Kata Nama", distractor: "buku" },
+      { id: 6, word: "makan", category: "Kata Kerja", distractor: "minum" },
+      { id: 7, word: "minum", category: "Kata Kerja", distractor: "makan" },
+      { id: 8, word: "lari", category: "Kata Kerja", distractor: "tidur" },
+      { id: 9, word: "tidur", category: "Kata Kerja", distractor: "mandi" },
+      { id: 10, word: "mandi", category: "Kata Kerja", distractor: "lari" },
+      { id: 11, word: "besar", category: "Kata Adjektif", distractor: "kecil" },
+      { id: 12, word: "kecil", category: "Kata Adjektif", distractor: "besar" },
+      { id: 13, word: "merah", category: "Kata Adjektif", distractor: "biru" },
+      { id: 14, word: "biru", category: "Kata Adjektif", distractor: "merah" },
+      { id: 15, word: "cantik", category: "Kata Adjektif", distractor: "kecil" },
+      { id: 16, word: "ibu", category: "Ahli Keluarga", distractor: "ayah" },
+      { id: 17, word: "ayah", category: "Ahli Keluarga", distractor: "ibu" },
+      { id: 18, word: "abang", category: "Ahli Keluarga", distractor: "adik" },
+      { id: 19, word: "kakak", category: "Ahli Keluarga", distractor: "abang" },
+      { id: 20, word: "adik", category: "Ahli Keluarga", distractor: "kakak" }
+    ];
+
+    // IMAGE DICTIONARY (High Quality Child-friendly Visuals)
+    const imageMap = {
+      "bola": "https://images.unsplash.com/photo-1614632537197-38a17061c2bd?auto=format&fit=crop&w=600&q=80",
+      "buku": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
+      "kereta": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=600&q=80",
+      "epal": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=600&q=80",
+      "kasut": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80",
+      "makan": "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=600&q=80",
+      "minum": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
+      "lari": "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=600&q=80",
+      "tidur": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=600&q=80",
+      "mandi": "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=600&q=80",
+      "besar": "https://images.unsplash.com/photo-1562077772-3bd90403f7f0?auto=format&fit=crop&w=600&q=80",
+      "kecil": "https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&w=600&q=80",
+      "merah": "https://images.unsplash.com/photo-1508873696983-2df515122519?auto=format&fit=crop&w=600&q=80",
+      "biru": "https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=600&q=80",
+      "cantik": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=600&q=80",
+      "ibu": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80",
+      "ayah": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
+      "abang": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=600&q=80",
+      "kakak": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80",
+      "adik": "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=600&q=80"
+    };
+
+    function generateImageElement(key) {
+      const url = imageMap[key] || "https://images.unsplash.com/photo-1614632537197-38a17061c2bd?auto=format&fit=crop&w=600&q=80";
+      return `<img src="${url}" alt="${key}" loading="lazy" class="rounded-2xl border-2 border-slate-100 shadow-sm">`;
+    }
+
+    // STATE MANAGEMENT
+    let currentMode = null; // 'pemahaman' | 'ekspresif'
+    let currentIndex = 0;
+    let completedCount = 0;
+    let skippedCount = 0;
+    let activeQuestionData = null;
+    let correctOptionIndex = 0;
+    let isListening = false;
+    let recognition = null;
+
+    // AUDIO SYNTHESIS & TTS
+    function speakText(text, callback) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ms-MY';
+        utterance.rate = 0.85; // Slower rate for SLD clarity
+        utterance.pitch = 1.1; // Friendly tone
+        if (callback) utterance.onend = callback;
+        window.speechSynthesis.speak(utterance);
+      } else if(callback) {
+        callback();
+      }
+    }
+
+    function playSoundEffect(type) {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (type === 'correct') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(400, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.3);
+      } else {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(200, ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(150, ctx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.2);
+      }
+    }
+
+    const praises = ["Hebat!", "Pandai!", "Tahniah!", "Bagus!", "Bijak!", "Syabas!", "Excellent!", "Good Job!", "Wow!", "Terbaik!"];
+    function getRandomPraise() {
+      return praises[Math.floor(Math.random() * praises.length)];
+    }
+
+    // NAVIGATION
+    function goToHome() {
+      stopSpeechRecognition();
+      document.getElementById('screen-home').classList.remove('hidden');
+      document.getElementById('screen-pemahaman').classList.add('hidden');
+      document.getElementById('screen-ekspresif').classList.add('hidden');
+      document.getElementById('screen-summary').classList.add('hidden');
+      document.getElementById('stats-pill').classList.add('hidden');
+    }
+
+    function startActivity(mode) {
+      currentMode = mode;
+      currentIndex = 0;
+      completedCount = 0;
+      skippedCount = 0;
+
+      document.getElementById('screen-home').classList.add('hidden');
+      document.getElementById('stats-pill').classList.remove('hidden');
+
+      if (mode === 'pemahaman') {
+        document.getElementById('screen-pemahaman').classList.remove('hidden');
+        loadPemahamanItem();
+      } else {
+        document.getElementById('screen-ekspresif').classList.remove('hidden');
+        setupSpeechRecognition();
+        loadEkspresifItem();
+      }
+    }
+
+    function updateStatsPill() {
+      document.getElementById('current-index').textContent = currentIndex + 1;
+      document.getElementById('total-items').textContent = dataset.length;
+    }
+
+    // PEMAHAMAN ACTIVITY LOGIC
+    function loadPemahamanItem() {
+      if (currentIndex >= dataset.length) {
+        finishSession();
+        return;
+      }
+      updateStatsPill();
+      activeQuestionData = dataset[currentIndex];
+
+      const promptText = `Mana ${activeQuestionData.word}?`;
+      document.getElementById('pemahaman-prompt').textContent = `"${promptText}"`;
+
+      // Randomize Left/Right Placement
+      correctOptionIndex = Math.random() < 0.5 ? 0 : 1;
+      const optionAKey = correctOptionIndex === 0 ? activeQuestionData.word : activeQuestionData.distractor;
+      const optionBKey = correctOptionIndex === 1 ? activeQuestionData.word : activeQuestionData.distractor;
+
+      document.getElementById('option-a-img').innerHTML = generateImageElement(optionAKey);
+      document.getElementById('option-b-img').innerHTML = generateImageElement(optionBKey);
+
+      // Reset styles
+      document.getElementById('option-a-card').className = "btn-bounce bg-white p-3 rounded-3xl shadow-xl border-4 border-slate-200 hover:border-emerald-400 cursor-pointer flex flex-col items-center justify-center transition-all h-64 md:h-72";
+      document.getElementById('option-b-card').className = "btn-bounce bg-white p-3 rounded-3xl shadow-xl border-4 border-slate-200 hover:border-emerald-400 cursor-pointer flex flex-col items-center justify-center transition-all h-64 md:h-72";
+
+      playInstructionAudio();
+    }
+
+    function playInstructionAudio() {
+      if (currentMode === 'pemahaman') {
+        speakText(`Mana ${activeQuestionData.word}`);
+      } else if (currentMode === 'ekspresif') {
+        speakText("Apa ini?");
+      }
+    }
+
+    function checkPemahamanAnswer(selectedIndex) {
+      if (selectedIndex === correctOptionIndex) {
+        playSoundEffect('correct');
+        completedCount++;
+        showFeedbackModal(true, getRandomPraise());
+      } else {
+        playSoundEffect('wrong');
+        const selectedCard = selectedIndex === 0 ? document.getElementById('option-a-card') : document.getElementById('option-b-card');
+        selectedCard.classList.add('border-rose-400', 'bg-rose-50');
+        showFeedbackModal(false, "Cuba lagi.");
+      }
+    }
+
+    // EKSPRESIF ACTIVITY LOGIC
+    function loadEkspresifItem() {
+      if (currentIndex >= dataset.length) {
+        finishSession();
+        return;
+      }
+      updateStatsPill();
+      activeQuestionData = dataset[currentIndex];
+
+      document.getElementById('ekspresif-img').innerHTML = generateImageElement(activeQuestionData.word);
+      document.getElementById('speech-recognized-text').textContent = "";
+      playInstructionAudio();
+    }
+
+    function evaluateEkspresif(isCorrect) {
+      stopSpeechRecognition();
+      if (isCorrect) {
+        playSoundEffect('correct');
+        completedCount++;
+        showFeedbackModal(true, getRandomPraise(), activeQuestionData.word);
+      } else {
+        playSoundEffect('wrong');
+        showFeedbackModal(false, "Cuba lagi.", `Sebut: "${activeQuestionData.word}"`);
+      }
+    }
+
+    // SPEECH RECOGNITION (WEB SPEECH API)
+    function setupSpeechRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.lang = 'ms-MY';
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        recognition.onstart = () => {
+          isListening = true;
+          document.getElementById('mic-btn').classList.add('pulse-ring', 'bg-red-600');
+          document.getElementById('mic-label').textContent = "Mendengar...";
+        };
+
+        recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript.toLowerCase();
+          document.getElementById('speech-recognized-text').textContent = `"${transcript}"`;
+          
+          const target = activeQuestionData.word.toLowerCase();
+          if (transcript.includes(target)) {
+            evaluateEkspresif(true);
+          } else {
+            evaluateEkspresif(false);
+          }
+        };
+
+        recognition.onerror = () => { stopSpeechRecognition(); };
+        recognition.onend = () => { stopSpeechRecognition(); };
+      } else {
+        document.getElementById('mic-btn').style.display = 'none';
+      }
+    }
+
+    function toggleSpeechRecognition() {
+      if (!recognition) return;
+      if (isListening) {
+        stopSpeechRecognition();
+      } else {
+        try { recognition.start(); } catch(e){}
+      }
+    }
+
+    function stopSpeechRecognition() {
+      isListening = false;
+      if (recognition) try { recognition.stop(); } catch(e){}
+      const micBtn = document.getElementById('mic-btn');
+      if (micBtn) {
+        micBtn.classList.remove('pulse-ring', 'bg-red-600');
+        document.getElementById('mic-label').textContent = "Tekan & Sebut";
+      }
+    }
+
+    // SKIP & FEEDBACK
+    function skipItem() {
+      skippedCount++;
+      nextItem();
+    }
+
+    function nextItem() {
+      currentIndex++;
+      if (currentMode === 'pemahaman') loadPemahamanItem();
+      else loadEkspresifItem();
+    }
+
+    function showFeedbackModal(isSuccess, title, subtitle = "") {
+      const modal = document.getElementById('feedback-modal');
+      const card = document.getElementById('feedback-card');
+      const stars = document.getElementById('feedback-stars');
+      const titleEl = document.getElementById('feedback-title');
+      const subEl = document.getElementById('feedback-subtitle');
+
+      modal.classList.remove('hidden');
+
+      if (isSuccess) {
+        stars.classList.remove('hidden');
+        titleEl.textContent = title;
+        titleEl.className = "text-3xl font-extrabold text-emerald-600";
+        card.className = "bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl border-4 border-emerald-400 flex flex-col items-center text-center gap-4";
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
+        speakText(title);
+      } else {
+        stars.classList.add('hidden');
+        titleEl.textContent = title;
+        titleEl.className = "text-3xl font-extrabold text-amber-600";
+        card.className = "bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl border-4 border-amber-300 flex flex-col items-center text-center gap-4";
+        speakText(title);
+      }
+
+      subEl.textContent = subtitle;
+      document.getElementById('feedback-btn').onclick = () => {
+        closeFeedbackModal();
+        if (isSuccess) nextItem();
+      };
+    }
+
+    function closeFeedbackModal() {
+      document.getElementById('feedback-modal').classList.add('hidden');
+    }
+
+    // FINISH SESSION
+    function finishSession() {
+      stopSpeechRecognition();
+      document.getElementById('screen-pemahaman').classList.add('hidden');
+      document.getElementById('screen-ekspresif').classList.add('hidden');
+      document.getElementById('stats-pill').classList.add('hidden');
+      document.getElementById('screen-summary').classList.remove('hidden');
+
+      document.getElementById('summary-completed').textContent = completedCount;
+      document.getElementById('summary-skipped').textContent = skippedCount;
+
+      confetti({ particleCount: 120, spread: 100, origin: { y: 0.5 } });
+      speakText("Tahniah! Anda berjaya menyiapkan latihan TambahKata.");
+
+      if (window.saveSessionData) {
+        window.saveSessionData(currentMode, completedCount, skippedCount);
+      }
+    }
+
+    function restartActivity() {
+      startActivity(currentMode);
+    }
+  </script>
+</body>
+</html>
