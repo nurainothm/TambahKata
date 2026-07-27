@@ -282,14 +282,15 @@
   <!-- APPLICATION LOGIC & DATA -->
   <script>
     // DATA MODEL (JSON) - 20 ITEMS ACROSS 4 CATEGORIES
+    // (Perkataan "makan" telah ditukar kepada "tulis")
     const dataset = [
       { id: 1, word: "bola", category: "Kata Nama", distractor: "epal" },
       { id: 2, word: "buku", category: "Kata Nama", distractor: "kereta" },
       { id: 3, word: "kereta", category: "Kata Nama", distractor: "buku" },
       { id: 4, word: "epal", category: "Kata Nama", distractor: "bola" },
       { id: 5, word: "kasut", category: "Kata Nama", distractor: "buku" },
-      { id: 6, word: "makan", category: "Kata Kerja", distractor: "minum" },
-      { id: 7, word: "minum", category: "Kata Kerja", distractor: "makan" },
+      { id: 6, word: "tulis", category: "Kata Kerja", distractor: "minum" },
+      { id: 7, word: "minum", category: "Kata Kerja", distractor: "tulis" },
       { id: 8, word: "tidur", category: "Kata Kerja", distractor: "mandi" },
       { id: 9, word: "mandi", category: "Kata Kerja", distractor: "lari" },
       { id: 10, word: "lari", category: "Kata Kerja", distractor: "tidur" },
@@ -305,15 +306,15 @@
       { id: 20, word: "adik", category: "Ahli Keluarga", distractor: "kakak" }
     ];
 
-    // DEFAULT IMAGE MAP (Gambar 'makan' telah ditukar kepada orang sedang makan kek)
+    // DEFAULT IMAGE MAP
     const defaultImageMap = {
       "bola": "https://images.unsplash.com/photo-1614632537197-38a17061c2bd?auto=format&fit=crop&w=600&q=80",
       "buku": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
       "kereta": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=600&q=80",
       "epal": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=600&q=80",
       "kasut": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80",
-      // Gambar Makan: Orang/kanak-kanak sedang makan kek dengan jelas
-      "makan": "https://images.unsplash.com/photo-1535141192574-5d4897c13136?auto=format&fit=crop&w=600&q=80",
+      // Gambar Tulis: Tangan/kanak-kanak sedang menulis di atas kertas dengan pensel
+      "tulis": "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=600&q=80",
       "minum": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
       "tidur": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=600&q=80",
       "mandi": "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=600&q=80",
