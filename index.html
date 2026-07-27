@@ -47,13 +47,12 @@
       overflow: hidden;
       border-radius: 1.5rem;
     }
-    .img-card-container img {
+    .img-card-container svg {
       width: 100%;
       height: 100%;
-      object-fit: cover;
       transition: transform 0.3s ease;
     }
-    .img-card-container:hover img {
+    .img-card-container:hover svg {
       transform: scale(1.05);
     }
   </style>
@@ -267,33 +266,35 @@
       { id: 20, word: "adik", category: "Ahli Keluarga", distractor: "kakak" }
     ];
 
-    // IMAGE DICTIONARY (High Quality Child-friendly Visuals)
-    const imageMap = {
-      "bola": "https://images.unsplash.com/photo-1614632537197-38a17061c2bd?auto=format&fit=crop&w=600&q=80",
-      "buku": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
-      "kereta": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=600&q=80",
-      "epal": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=600&q=80",
-      "kasut": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80",
-      "makan": "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=600&q=80",
-      "minum": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
-      "lari": "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=600&q=80",
-      "tidur": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=600&q=80",
-      "mandi": "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=600&q=80",
-      "besar": "https://images.unsplash.com/photo-1562077772-3bd90403f7f0?auto=format&fit=crop&w=600&q=80",
-      "kecil": "https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&w=600&q=80",
-      "merah": "https://images.unsplash.com/photo-1508873696983-2df515122519?auto=format&fit=crop&w=600&q=80",
-      "biru": "https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=600&q=80",
-      "cantik": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=600&q=80",
-      "ibu": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80",
-      "ayah": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
-      "abang": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=600&q=80",
-      "kakak": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80",
-      "adik": "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=600&q=80"
-    };
+    // CARTOON VECTOR ILLUSTRATION GENERATOR (KID-FRIENDLY SVGs)
+    function generateCartoonSVG(key) {
+      const svgs = {
+        "bola": `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="#3B82F6" stroke="#1D4ED8" stroke-width="4"/><path d="M 50 8 Q 65 30 50 50 Q 35 70 50 92" fill="none" stroke="#FFF" stroke-width="5"/><path d="M 8 50 Q 30 35 50 50 Q 70 65 92 50" fill="none" stroke="#FFF" stroke-width="5"/><circle cx="50" cy="50" r="10" fill="#EF4444"/></svg>`,
+        "buku": `<svg viewBox="0 0 100 100"><rect x="15" y="20" width="70" height="60" rx="6" fill="#F59E0B" stroke="#B45309" stroke-width="4"/><path d="M 50 20 L 50 80 M 20 25 L 45 25 M 20 35 L 45 35 M 20 45 L 40 45 M 55 25 L 80 25 M 55 35 L 80 35" stroke="#FFF" stroke-width="3" stroke-linecap="round"/><circle cx="70" cy="60" r="8" fill="#EF4444"/></svg>`,
+        "kereta": `<svg viewBox="0 0 100 100"><rect x="15" y="45" width="70" height="25" rx="8" fill="#EF4444" stroke="#B91C1C" stroke-width="4"/><path d="M 25 45 Q 35 25 50 25 Q 65 25 75 45 Z" fill="#38BDF8" stroke="#0284C7" stroke-width="3"/><circle cx="32" cy="70" r="10" fill="#334155" stroke="#0F172A" stroke-width="3"/><circle cx="68" cy="70" r="10" fill="#334155" stroke="#0F172A" stroke-width="3"/><circle cx="32" cy="70" r="4" fill="#FFF"/><circle cx="68" cy="70" r="4" fill="#FFF"/></svg>`,
+        "epal": `<svg viewBox="0 0 100 100"><path d="M 50 30 Q 30 15 20 35 Q 10 60 30 80 Q 50 90 50 80 Q 50 90 70 80 Q 90 60 80 35 Q 70 15 50 30 Z" fill="#EF4444" stroke="#B91C1C" stroke-width="4"/><path d="M 50 30 Q 55 15 60 10" fill="none" stroke="#78350F" stroke-width="4" stroke-linecap="round"/><path d="M 55 20 Q 70 15 75 25 Q 60 30 55 20 Z" fill="#22C55E" stroke="#15803D" stroke-width="2"/></svg>`,
+        "kasut": `<svg viewBox="0 0 100 100"><path d="M 15 60 Q 25 40 50 45 L 85 55 Q 90 70 80 75 L 15 75 Z" fill="#10B981" stroke="#047857" stroke-width="4"/><rect x="15" y="72" width="70" height="8" rx="3" fill="#FFF" stroke="#CBD5E1" stroke-width="2"/><circle cx="40" cy="53" r="3" fill="#FFF"/><circle cx="52" cy="55" r="3" fill="#FFF"/></svg>`,
+        "makan": `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="#FED7AA" stroke="#F97316" stroke-width="4"/><ellipse cx="50" cy="62" rx="25" ry="12" fill="#FFF" stroke="#CBD5E1" stroke-width="2"/><path d="M 32 60 Q 50 40 68 60 Z" fill="#F59E0B"/><circle cx="38" cy="38" r="5" fill="#334155"/><circle cx="62" cy="38" r="5" fill="#334155"/><path d="M 42 48 Q 50 56 58 48" fill="none" stroke="#334155" stroke-width="3" stroke-linecap="round"/></svg>`,
+        "minum": `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="#BAE6FD" stroke="#0284C7" stroke-width="4"/><rect x="32" y="35" width="36" height="45" rx="6" fill="#FFF" stroke="#0284C7" stroke-width="4"/><path d="M 34 50 L 66 50 L 66 74 Q 66 78 60 78 L 40 78 Q 34 78 34 74 Z" fill="#38BDF8"/><line x1="42" y1="20" x2="52" y2="40" stroke="#EF4444" stroke-width="5" stroke-linecap="round"/></svg>`,
+        "lari": `<svg viewBox="0 0 100 100"><circle cx="60" cy="25" r="12" fill="#FCA5A5" stroke="#E11D48" stroke-width="3"/><path d="M 55 37 L 40 55 L 20 50" fill="none" stroke="#3B82F6" stroke-width="6" stroke-linecap="round"/><path d="M 40 55 L 60 65 L 75 55" fill="none" stroke="#3B82F6" stroke-width="6" stroke-linecap="round"/><path d="M 40 55 L 30 75 L 15 80" fill="none" stroke="#1D4ED8" stroke-width="6" stroke-linecap="round"/><path d="M 40 55 L 55 75 L 70 85" fill="none" stroke="#1D4ED8" stroke-width="6" stroke-linecap="round"/></svg>`,
+        "tidur": `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="#C084FC" stroke="#7E22CE" stroke-width="4"/><path d="M 30 45 Q 38 52 46 45" fill="none" stroke="#334155" stroke-width="3" stroke-linecap="round"/><path d="M 54 45 Q 62 52 70 45" fill="none" stroke="#334155" stroke-width="3" stroke-linecap="round"/><text x="65" y="30" font-size="20" font-weight="bold" fill="#FFF">Zzz</text></svg>`,
+        "mandi": `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="#67E8F9" stroke="#0891B2" stroke-width="4"/><path d="M 30 30 Q 50 15 70 30" fill="none" stroke="#0284C7" stroke-width="5"/><circle cx="40" cy="45" r="4" fill="#38BDF8"/><circle cx="50" cy="55" r="5" fill="#38BDF8"/><circle cx="60" cy="40" r="3" fill="#38BDF8"/><path d="M 25 70 Q 50 60 75 70 L 75 80 Q 50 90 25 80 Z" fill="#F472B6"/></svg>`,
+        "besar": `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#EC4899" stroke="#BE185D" stroke-width="4"/><text x="50" y="60" font-size="30" font-weight="bold" fill="#FFF" text-anchor="middle">BESAR</text></svg>`,
+        "kecil": `<svg viewBox="0 0 100 100"><rect x="5" y="5" width="90" height="90" rx="10" fill="#F1F5F9"/><circle cx="50" cy="50" r="14" fill="#10B981" stroke="#047857" stroke-width="3"/><text x="50" y="80" font-size="16" font-weight="bold" fill="#047857" text-anchor="middle">kecil</text></svg>`,
+        "merah": `<svg viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" rx="20" fill="#EF4444" stroke="#B91C1C" stroke-width="5"/><circle cx="50" cy="50" r="20" fill="#FFF" opacity="0.3"/></svg>`,
+        "biru": `<svg viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" rx="20" fill="#3B82F6" stroke="#1D4ED8" stroke-width="5"/><circle cx="50" cy="50" r="20" fill="#FFF" opacity="0.3"/></svg>`,
+        "cantik": `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="16" fill="#FACC15" stroke="#CA8A04" stroke-width="3"/><circle cx="50" cy="20" r="14" fill="#F43F5E"/><circle cx="50" cy="80" r="14" fill="#F43F5E"/><circle cx="20" cy="50" r="14" fill="#F43F5E"/><circle cx="80" cy="50" r="14" fill="#F43F5E"/><circle cx="28" cy="28" r="14" fill="#FB7185"/><circle cx="72" cy="72" r="14" fill="#FB7185"/><circle cx="28" cy="72" r="14" fill="#FB7185"/><circle cx="72" cy="28" r="14" fill="#FB7185"/></svg>`,
+        "ibu": `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="#FBCFE8" stroke="#DB2777" stroke-width="4"/><circle cx="50" cy="40" r="18" fill="#FED7AA"/><path d="M 30 35 Q 50 15 70 35 Q 65 20 50 20 Q 35 20 30 35 Z" fill="#881337"/><path d="M 25 80 Q 50 60 75 80 Z" fill="#F43F5E"/><circle cx="44" cy="38" r="2" fill="#000"/><circle cx="56" cy="38" r="2" fill="#000"/><path d="M 45 46 Q 50 50 55 46" fill="none" stroke="#E11D48" stroke-width="2"/></svg>`,
+        "ayah": `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="#BAE6FD" stroke="#0284C7" stroke-width="4"/><circle cx="50" cy="40" r="18" fill="#FED7AA"/><path d="M 30 30 Q 50 18 70 30 Q 50 22 30 30 Z" fill="#1E293B"/><path d="M 25 80 L 75 80 L 65 62 L 35 62 Z" fill="#0284C7"/><circle cx="44" cy="38" r="2" fill="#000"/><circle cx="56" cy="38" r="2" fill="#000"/><path d="M 45 46 Q 50 50 55 46" fill="none" stroke="#000" stroke-width="2"/></svg>`,
+        "abang": `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="#FEF08A" stroke="#CA8A04" stroke-width="4"/><circle cx="50" cy="42" r="16" fill="#FED7AA"/><path d="M 32 35 Q 50 22 68 35" fill="none" stroke="#475569" stroke-width="6" stroke-linecap="round"/><path d="M 30 80 L 70 80 L 62 65 L 38 65 Z" fill="#10B981"/><circle cx="44" cy="40" r="2" fill="#000"/><circle cx="56" cy="40" r="2" fill="#000"/><path d="M 45 48 Q 50 52 55 48" fill="none" stroke="#000" stroke-width="2"/></svg>`,
+        "kakak": `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="#FED7AA" stroke="#F97316" stroke-width="4"/><circle cx="50" cy="40" r="16" fill="#FFEDD5"/><path d="M 28 35 Q 50 15 72 35 L 75 60 L 25 60 Z" fill="#A855F7"/><path d="M 30 80 Q 50 65 70 80 Z" fill="#EC4899"/><circle cx="44" cy="38" r="2" fill="#000"/><circle cx="56" cy="38" r="2" fill="#000"/><path d="M 45 46 Q 50 50 55 46" fill="none" stroke="#E11D48" stroke-width="2"/></svg>`,
+        "adik": `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="#A7F3D0" stroke="#059669" stroke-width="4"/><circle cx="50" cy="45" r="18" fill="#FED7AA"/><path d="M 48 24 Q 50 18 52 24" fill="none" stroke="#78350F" stroke-width="3"/><path d="M 32 80 Q 50 70 68 80 Z" fill="#F59E0B"/><circle cx="43" cy="42" r="3" fill="#334155"/><circle cx="57" cy="42" r="3" fill="#334155"/><path d="M 44 52 Q 50 58 56 52" fill="none" stroke="#E11D48" stroke-width="2.5"/></svg>`
+      };
+      return svgs[key] || `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#CBD5E1"/></svg>`;
+    }
 
     function generateImageElement(key) {
-      const url = imageMap[key] || "https://images.unsplash.com/photo-1614632537197-38a17061c2bd?auto=format&fit=crop&w=600&q=80";
-      return `<img src="${url}" alt="${key}" loading="lazy" class="rounded-2xl border-2 border-slate-100 shadow-sm">`;
+      return generateCartoonSVG(key);
     }
 
     // STATE MANAGEMENT
