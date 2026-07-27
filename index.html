@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>TambahKata - Pembelajaran Bahasa Melayu</title>
+  <title>TambahKata - Pembelajaran Kosa Kata</title>
 
   <!-- Tailwind CSS & Canvas Confetti -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <!-- Google Fonts: Fredoka & FontAwesome Icons -->
+  <!-- Google Fonts & FontAwesome Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -46,6 +46,7 @@
       justify-content: center;
       overflow: hidden;
       border-radius: 1.5rem;
+      background-color: #F8FAFC;
     }
     .img-card-container img {
       width: 100%;
@@ -62,15 +63,27 @@
 
   <!-- TOP BAR / NAVIGATION -->
   <header class="p-4 flex justify-between items-center bg-white/80 backdrop-blur border-b-4 border-amber-200 z-10">
-    <button onclick="goToHome()" class="btn-bounce bg-amber-400 text-white font-bold py-2 px-5 rounded-full text-xl shadow-md flex items-center gap-2 border-b-4 border-amber-600">
-      <i class="fa-solid fa-house"></i> Utama
-    </button>
+    <div class="flex items-center gap-2">
+      <button onclick="goToHome()" class="btn-bounce bg-amber-400 text-white font-bold py-2 px-4 rounded-full text-lg shadow-md flex items-center gap-2 border-b-4 border-amber-600">
+        <i class="fa-solid fa-house"></i> Utama
+      </button>
+      <button onclick="toggleAudioSetting()" id="sound-toggle-btn" class="btn-bounce bg-emerald-400 text-white font-bold py-2 px-3 rounded-full text-lg shadow-md border-b-4 border-emerald-600">
+        <i class="fa-solid fa-volume-high"></i>
+      </button>
+    </div>
+
     <div class="flex items-center gap-2">
       <span class="text-3xl">🔤</span>
       <h1 class="text-2xl md:text-3xl font-extrabold text-amber-600 tracking-wide">TambahKata</h1>
     </div>
-    <div id="stats-pill" class="hidden bg-sky-100 text-sky-800 px-4 py-1.5 rounded-full font-bold text-lg border-2 border-sky-300">
-      Soalan <span id="current-index">1</span> / <span id="total-items">20</span>
+
+    <div class="flex items-center gap-2">
+      <button onclick="openImageManager()" class="btn-bounce bg-sky-400 text-white font-bold py-2 px-4 rounded-full text-lg shadow-md flex items-center gap-2 border-b-4 border-sky-600">
+        <i class="fa-solid fa-images"></i> <span class="hidden md:inline">Gambar</span>
+      </button>
+      <div id="stats-pill" class="hidden bg-sky-100 text-sky-800 px-3 py-1 rounded-full font-bold text-base md:text-lg border-2 border-sky-300">
+        <span id="current-index">1</span>/<span id="total-items">20</span>
+      </div>
     </div>
   </header>
 
@@ -84,12 +97,12 @@
           🗣️
         </div>
         <h2 class="text-3xl md:text-4xl font-extrabold text-sky-600 mb-1">TambahKata</h2>
-        <p class="text-slate-600 text-lg md:text-xl font-bold">Aplikasi Pembelajaran Kosa Kata Kanak-Kanak</p>
+        <p class="text-slate-600 text-lg md:text-xl font-bold">Aplikasi Pembelajaran Kosa Kata Bahasa Melayu</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         <!-- Menu Pemahaman -->
-        <button onclick="startActivity('pemahaman')" class="btn-bounce bg-emerald-400 hover:bg-emerald-500 text-white p-6 rounded-3xl shadow-lg border-b-8 border-emerald-600 flex flex-col items-center gap-3 group">
+        <button onclick="startActivity('pemahaman')" class="btn-bounce bg-emerald-400 hover:bg-emerald-500 text-white p-6 rounded-3xl shadow-lg border-b-8 border-emerald-600 flex flex-col items-center gap-3">
           <div class="w-20 h-20 bg-white/30 rounded-full flex items-center justify-center text-4xl">
             🟢
           </div>
@@ -98,7 +111,7 @@
         </button>
 
         <!-- Menu Ekspresif -->
-        <button onclick="startActivity('ekspresif')" class="btn-bounce bg-sky-400 hover:bg-sky-500 text-white p-6 rounded-3xl shadow-lg border-b-8 border-sky-600 flex flex-col items-center gap-3 group">
+        <button onclick="startActivity('ekspresif')" class="btn-bounce bg-sky-400 hover:bg-sky-500 text-white p-6 rounded-3xl shadow-lg border-b-8 border-sky-600 flex flex-col items-center gap-3">
           <div class="w-20 h-20 bg-white/30 rounded-full flex items-center justify-center text-4xl">
             🔵
           </div>
@@ -127,7 +140,7 @@
       </div>
 
       <button onclick="skipItem()" class="btn-bounce bg-slate-300 hover:bg-slate-400 text-slate-700 font-bold py-2 px-6 rounded-full text-lg shadow border-b-4 border-slate-400 flex items-center gap-2">
-        <span>SKIP</span> <i class="fa-solid fa-forward"></i>
+        <span>Skip</span> <i class="fa-solid fa-forward"></i>
       </button>
     </section>
 
@@ -162,11 +175,28 @@
       </div>
 
       <button onclick="skipItem()" class="btn-bounce bg-slate-300 hover:bg-slate-400 text-slate-700 font-bold py-2 px-6 rounded-full text-lg shadow border-b-4 border-slate-400 flex items-center gap-2 mt-1">
-        <span>SKIP</span> <i class="fa-solid fa-forward"></i>
+        <span>Skip</span> <i class="fa-solid fa-forward"></i>
       </button>
     </section>
 
-    <!-- 4. END OF SESSION SCREEN -->
+    <!-- 4. PENGURUSAN GAMBAR (UPLOAD IMAGE MANAGER) -->
+    <section id="screen-image-manager" class="hidden w-full max-w-4xl flex flex-col items-center gap-6 my-4">
+      <div class="bg-white p-6 rounded-3xl shadow-xl border-4 border-sky-300 w-full flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+          <h2 class="text-3xl font-extrabold text-sky-600">📁 Pengurusan Gambar</h2>
+          <p class="text-slate-600 font-semibold">Tukar gambar bagi setiap perkataan (JPG, PNG, WEBP &lt; 5MB)</p>
+        </div>
+        <button onclick="goToHome()" class="btn-bounce bg-amber-400 text-white font-bold py-2 px-6 rounded-full text-lg border-b-4 border-amber-600">
+          Kembali
+        </button>
+      </div>
+
+      <div id="image-manager-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 w-full">
+        <!-- Dynamic Cards Inserted Here -->
+      </div>
+    </section>
+
+    <!-- 5. END OF SESSION SCREEN -->
     <section id="screen-summary" class="hidden w-full max-w-md flex flex-col items-center gap-6 text-center">
       <div class="bg-white p-8 rounded-3xl shadow-2xl border-4 border-amber-300 w-full flex flex-col items-center gap-4">
         <div class="text-6xl">🎉</div>
@@ -177,6 +207,10 @@
           <div class="flex flex-col items-center">
             <span class="text-slate-500 font-bold text-sm">Selesai</span>
             <span id="summary-completed" class="text-3xl font-extrabold text-emerald-600">0</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <span class="text-slate-500 font-bold text-sm">Betul</span>
+            <span id="summary-correct" class="text-3xl font-extrabold text-sky-600">0</span>
           </div>
           <div class="flex flex-col items-center">
             <span class="text-slate-500 font-bold text-sm">Di-Skip</span>
@@ -209,6 +243,9 @@
     </div>
   </div>
 
+  <!-- HIDDEN FILE INPUT FOR CUSTOM IMAGE UPLOADS -->
+  <input type="file" id="global-file-input" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="handleFileSelect(event)">
+
   <!-- FIREBASE INTEGRATION (Module) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -227,11 +264,12 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    window.saveSessionData = function(mode, completed, skipped) {
+    window.saveSessionData = function(mode, completed, correct, skipped) {
       try {
         push(ref(db, 'sessions'), {
           mode: mode,
           completedCount: completed,
+          correctCount: correct,
           skippedCount: skipped,
           timestamp: new Date().toISOString()
         });
@@ -244,7 +282,6 @@
   <!-- APPLICATION LOGIC & DATA -->
   <script>
     // DATA MODEL (JSON) - 20 ITEMS ACROSS 4 CATEGORIES
-    // (Perkataan "mandi" telah digantikan dengan "lompat")
     const dataset = [
       { id: 1, word: "bola", category: "Kata Nama", distractor: "epal" },
       { id: 2, word: "buku", category: "Kata Nama", distractor: "kereta" },
@@ -253,9 +290,9 @@
       { id: 5, word: "kasut", category: "Kata Nama", distractor: "buku" },
       { id: 6, word: "makan", category: "Kata Kerja", distractor: "minum" },
       { id: 7, word: "minum", category: "Kata Kerja", distractor: "makan" },
-      { id: 8, word: "lari", category: "Kata Kerja", distractor: "tidur" },
-      { id: 9, word: "tidur", category: "Kata Kerja", distractor: "lompat" },
-      { id: 10, word: "lompat", category: "Kata Kerja", distractor: "lari" },
+      { id: 8, word: "tidur", category: "Kata Kerja", distractor: "mandi" },
+      { id: 9, word: "mandi", category: "Kata Kerja", distractor: "lari" },
+      { id: 10, word: "lari", category: "Kata Kerja", distractor: "tidur" },
       { id: 11, word: "besar", category: "Kata Adjektif", distractor: "kecil" },
       { id: 12, word: "kecil", category: "Kata Adjektif", distractor: "besar" },
       { id: 13, word: "merah", category: "Kata Adjektif", distractor: "biru" },
@@ -268,21 +305,18 @@
       { id: 20, word: "adik", category: "Ahli Keluarga", distractor: "kakak" }
     ];
 
-    // HIGH QUALITY ACCURATE IMAGE MAP (Photorealistic / Clear Visual Action Images)
-    const imageMap = {
+    // DEFAULT IMAGE MAP (High Quality Visuals)
+    const defaultImageMap = {
       "bola": "https://images.unsplash.com/photo-1614632537197-38a17061c2bd?auto=format&fit=crop&w=600&q=80",
       "buku": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
       "kereta": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=600&q=80",
       "epal": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=600&q=80",
       "kasut": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80",
-      // Gambar Makan: Aksi kanak-kanak sedang makan dengan jelas
       "makan": "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&w=600&q=80",
-      // Gambar Minum: Aksi kanak-kanak sedang minum air/susu dengan jelas
       "minum": "https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=600&q=80",
-      "lari": "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=600&q=80",
       "tidur": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=600&q=80",
-      // Gambar Lompat (Menggantikan mandi)
-      "lompat": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=600&q=80",
+      "mandi": "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=600&q=80",
+      "lari": "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=600&q=80",
       "besar": "https://images.unsplash.com/photo-1562077772-3bd90403f7f0?auto=format&fit=crop&w=600&q=80",
       "kecil": "https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&w=600&q=80",
       "merah": "https://images.unsplash.com/photo-1508873696983-2df515122519?auto=format&fit=crop&w=600&q=80",
@@ -294,6 +328,20 @@
       "kakak": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80",
       "adik": "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=600&q=80"
     };
+
+    // LOCAL STORAGE FOR CUSTOM UPLOADED IMAGES
+    function getCustomImages() {
+      try {
+        return JSON.parse(localStorage.getItem('tambahkata_custom_images')) || {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function getImageForWord(key) {
+      const customImages = getCustomImages();
+      return customImages[key] || defaultImageMap[key] || defaultImageMap["bola"];
+    }
 
     function handleImageError(imgElement, key) {
       const parent = imgElement.parentElement;
@@ -307,7 +355,7 @@
     }
 
     function generateImageElement(key) {
-      const url = imageMap[key] || "https://images.unsplash.com/photo-1614632537197-38a17061c2bd?auto=format&fit=crop&w=600&q=80";
+      const url = getImageForWord(key);
       return `<img src="${url}" alt="${key}" loading="eager" onerror="handleImageError(this, '${key}')" class="rounded-2xl border-2 border-slate-100 shadow-sm">`;
     }
 
@@ -315,14 +363,34 @@
     let currentMode = null; // 'pemahaman' | 'ekspresif'
     let currentIndex = 0;
     let completedCount = 0;
+    let correctCount = 0;
     let skippedCount = 0;
     let activeQuestionData = null;
     let correctOptionIndex = 0;
     let isListening = false;
     let recognition = null;
+    let isAudioEnabled = true;
+    let activeUploadKey = null;
 
     // AUDIO SYNTHESIS & TTS
+    function toggleAudioSetting() {
+      isAudioEnabled = !isAudioEnabled;
+      const btn = document.getElementById('sound-toggle-btn');
+      if (isAudioEnabled) {
+        btn.innerHTML = `<i class="fa-solid fa-volume-high"></i>`;
+        btn.className = "btn-bounce bg-emerald-400 text-white font-bold py-2 px-3 rounded-full text-lg shadow-md border-b-4 border-emerald-600";
+      } else {
+        btn.innerHTML = `<i class="fa-solid fa-volume-xmark"></i>`;
+        btn.className = "btn-bounce bg-slate-400 text-white font-bold py-2 px-3 rounded-full text-lg shadow-md border-b-4 border-slate-600";
+        window.speechSynthesis.cancel();
+      }
+    }
+
     function speakText(text, callback) {
+      if (!isAudioEnabled) {
+        if (callback) callback();
+        return;
+      }
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
@@ -337,6 +405,7 @@
     }
 
     function playSoundEffect(type) {
+      if (!isAudioEnabled) return;
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -362,7 +431,7 @@
       }
     }
 
-    const praises = ["Hebat!", "Pandai!", "Tahniah!", "Bagus!", "Bijak!", "Syabas!", "Excellent!", "Good Job!", "Wow!", "Terbaik!"];
+    const praises = ["Hebat!", "Pandai!", "Syabas!", "Bagus!", "Bijak!", "Tahniah!", "Wow!", "Good Job!", "Excellent!", "Terbaik!"];
     function getRandomPraise() {
       return praises[Math.floor(Math.random() * praises.length)];
     }
@@ -373,6 +442,7 @@
       document.getElementById('screen-home').classList.remove('hidden');
       document.getElementById('screen-pemahaman').classList.add('hidden');
       document.getElementById('screen-ekspresif').classList.add('hidden');
+      document.getElementById('screen-image-manager').classList.add('hidden');
       document.getElementById('screen-summary').classList.add('hidden');
       document.getElementById('stats-pill').classList.add('hidden');
     }
@@ -381,6 +451,7 @@
       currentMode = mode;
       currentIndex = 0;
       completedCount = 0;
+      correctCount = 0;
       skippedCount = 0;
 
       document.getElementById('screen-home').classList.add('hidden');
@@ -440,6 +511,7 @@
       if (selectedIndex === correctOptionIndex) {
         playSoundEffect('correct');
         completedCount++;
+        correctCount++;
         showFeedbackModal(true, getRandomPraise());
       } else {
         playSoundEffect('wrong');
@@ -465,9 +537,10 @@
 
     function evaluateEkspresif(isCorrect) {
       stopSpeechRecognition();
+      completedCount++;
       if (isCorrect) {
         playSoundEffect('correct');
-        completedCount++;
+        correctCount++;
         showFeedbackModal(true, getRandomPraise(), activeQuestionData.word);
       } else {
         playSoundEffect('wrong');
@@ -528,6 +601,117 @@
       }
     }
 
+    // IMAGE MANAGER MODULE (UPLOAD, CROP/RESIZE & LOCALSTORAGE)
+    function openImageManager() {
+      stopSpeechRecognition();
+      document.getElementById('screen-home').classList.add('hidden');
+      document.getElementById('screen-pemahaman').classList.add('hidden');
+      document.getElementById('screen-ekspresif').classList.add('hidden');
+      document.getElementById('screen-summary').classList.add('hidden');
+      document.getElementById('stats-pill').classList.add('hidden');
+      document.getElementById('screen-image-manager').classList.remove('hidden');
+
+      renderImageManagerGrid();
+    }
+
+    function renderImageManagerGrid() {
+      const container = document.getElementById('image-manager-grid');
+      const customImages = getCustomImages();
+
+      container.innerHTML = dataset.map(item => {
+        const isCustom = !!customImages[item.word];
+        const currentSrc = getImageForWord(item.word);
+
+        return `
+          <div class="bg-white p-4 rounded-3xl shadow-lg border-2 border-slate-200 flex flex-col items-center gap-3">
+            <div class="flex justify-between w-full items-center">
+              <span class="text-xl font-extrabold text-sky-800 capitalize">${item.word}</span>
+              <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-full font-bold">${item.category}</span>
+            </div>
+            
+            <div class="w-full h-40 img-card-container">
+              <img src="${currentSrc}" alt="${item.word}" class="rounded-xl border shadow-sm">
+            </div>
+
+            <div class="flex gap-2 w-full mt-1">
+              <button onclick="triggerUpload('${item.word}')" class="btn-bounce flex-1 bg-sky-500 text-white font-bold py-2 rounded-xl text-sm shadow flex justify-center items-center gap-1 border-b-2 border-sky-700">
+                <i class="fa-solid fa-camera"></i> ${isCustom ? 'Tukar' : 'Muat Naik'}
+              </button>
+              ${isCustom ? `
+                <button onclick="resetWordImage('${item.word}')" class="btn-bounce bg-rose-500 text-white font-bold py-2 px-3 rounded-xl text-sm shadow border-b-2 border-rose-700" title="Padam & Guna Asal">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function triggerUpload(wordKey) {
+      activeUploadKey = wordKey;
+      const fileInput = document.getElementById('global-file-input');
+      fileInput.value = '';
+      fileInput.click();
+    }
+
+    function handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Validate Max Size 5MB
+      if (file.size > 5 * 1024 * 1024) {
+        alert("Had saiz gambar maksimum ialah 5 MB.");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const rawDataUrl = e.target.result;
+        // Crop & Resize via Canvas for optimal performance
+        compressAndSaveImage(activeUploadKey, rawDataUrl);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function compressAndSaveImage(wordKey, dataUrl) {
+      const img = new Image();
+      img.src = dataUrl;
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Square crop / resize 500x500
+        const targetSize = 500;
+        canvas.width = targetSize;
+        canvas.height = targetSize;
+
+        let minDim = Math.min(img.width, img.height);
+        let sx = (img.width - minDim) / 2;
+        let sy = (img.height - minDim) / 2;
+
+        ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, targetSize, targetSize);
+        const processedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+
+        // Save to LocalStorage
+        const customImages = getCustomImages();
+        customImages[wordKey] = processedDataUrl;
+        try {
+          localStorage.setItem('tambahkata_custom_images', JSON.stringify(customImages));
+          renderImageManagerGrid();
+        } catch(e) {
+          alert("Memori simpanan penuh. Sila padam beberapa gambar kustom terlebih dahulu.");
+        }
+      };
+    }
+
+    function resetWordImage(wordKey) {
+      const customImages = getCustomImages();
+      delete customImages[wordKey];
+      localStorage.setItem('tambahkata_custom_images', JSON.stringify(customImages));
+      renderImageManagerGrid();
+    }
+
     // SKIP & FEEDBACK
     function skipItem() {
       skippedCount++;
@@ -584,13 +768,14 @@
       document.getElementById('screen-summary').classList.remove('hidden');
 
       document.getElementById('summary-completed').textContent = completedCount;
+      document.getElementById('summary-correct').textContent = correctCount;
       document.getElementById('summary-skipped').textContent = skippedCount;
 
       confetti({ particleCount: 120, spread: 100, origin: { y: 0.5 } });
       speakText("Tahniah! Anda berjaya menyiapkan latihan TambahKata.");
 
       if (window.saveSessionData) {
-        window.saveSessionData(currentMode, completedCount, skippedCount);
+        window.saveSessionData(currentMode, completedCount, correctCount, skippedCount);
       }
     }
 
