@@ -44,7 +44,6 @@
       70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
       100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
     }
-    /* Khas untuk memuatkan keseluruhan gambar tanpa terpotong */
     .img-card-container {
       width: 100%;
       height: 100%;
@@ -101,11 +100,10 @@
           🗣️
         </div>
         <h2 class="text-2xl md:text-3xl font-extrabold text-sky-600 mb-0.5">TambahKata</h2>
-        <p class="text-slate-600 text-sm md:text-base font-bold">Pembelajaran Kosa Kata Bahasa Melayu</p>
+        <p class="text-slate-600 text-sm md:text-base font-bold">Pembelajaran Kosa Kata Bahasa Melayu Baku</p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-        <!-- Menu Pemahaman -->
         <button onclick="startActivity('pemahaman')" class="btn-bounce bg-emerald-400 hover:bg-emerald-500 text-white p-4 rounded-3xl shadow-md border-b-6 border-emerald-600 flex flex-col items-center gap-2">
           <div class="w-14 h-14 bg-white/30 rounded-full flex items-center justify-center text-3xl">
             🟢
@@ -114,7 +112,6 @@
           <span class="text-xs bg-emerald-600/40 px-2.5 py-0.5 rounded-full font-semibold">Dengar & Pilih</span>
         </button>
 
-        <!-- Menu Ekspresif -->
         <button onclick="startActivity('ekspresif')" class="btn-bounce bg-sky-400 hover:bg-sky-500 text-white p-4 rounded-3xl shadow-md border-b-6 border-sky-600 flex flex-col items-center gap-2">
           <div class="w-14 h-14 bg-white/30 rounded-full flex items-center justify-center text-3xl">
             🔵
@@ -162,7 +159,6 @@
         <div id="speech-recognized-text" class="mt-1 text-base font-bold text-sky-600 h-6"></div>
       </div>
 
-      <!-- SPEECH / MANUAL CONTROL BUTTONS -->
       <div class="w-full flex flex-col gap-2 items-center">
         <button id="mic-btn" onclick="toggleSpeechRecognition()" class="btn-bounce bg-rose-500 text-white font-bold py-2.5 px-6 rounded-full text-lg shadow border-b-4 border-rose-700 flex items-center gap-2">
           <i class="fa-solid fa-microphone text-xl"></i> <span id="mic-label">Tekan & Sebut</span>
@@ -183,7 +179,7 @@
       </button>
     </section>
 
-    <!-- 4. PENGURUSAN GAMBAR (UPLOAD IMAGE MANAGER) -->
+    <!-- 4. PENGURUSAN GAMBAR -->
     <section id="screen-image-manager" class="hidden w-full max-w-3xl flex flex-col items-center gap-3 my-auto h-full">
       <div class="bg-white p-4 rounded-2xl shadow border-2 border-sky-300 w-full flex justify-between items-center gap-2 shrink-0">
         <div>
@@ -195,9 +191,7 @@
         </button>
       </div>
 
-      <!-- Grid boleh skrol dengan gambar bernisbah penuh -->
       <div id="image-manager-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 w-full overflow-y-auto p-1 max-h-[75dvh]">
-        <!-- Dynamic Cards Inserted Here -->
       </div>
     </section>
 
@@ -248,10 +242,9 @@
     </div>
   </div>
 
-  <!-- HIDDEN FILE INPUT FOR CUSTOM IMAGE UPLOADS -->
   <input type="file" id="global-file-input" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="handleFileSelect(event)">
 
-  <!-- FIREBASE INTEGRATION (Module) -->
+  <!-- FIREBASE INTEGRATION -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -286,7 +279,6 @@
 
   <!-- APPLICATION LOGIC & DATA -->
   <script>
-    // DATA MODEL (JSON) - 20 ITEMS ACROSS 4 CATEGORIES
     const dataset = [
       { id: 1, word: "bola", category: "Kata Nama", distractor: "epal" },
       { id: 2, word: "buku", category: "Kata Nama", distractor: "kereta" },
@@ -310,7 +302,6 @@
       { id: 20, word: "adik", category: "Ahli Keluarga", distractor: "kakak" }
     ];
 
-    // DEFAULT IMAGE MAP
     const defaultImageMap = {
       "bola": "https://images.unsplash.com/photo-1614632537197-38a17061c2bd?auto=format&fit=crop&w=600&q=80",
       "buku": "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=600&q=80",
@@ -334,7 +325,6 @@
       "adik": "https://images.unsplash.com/photo-1519689680058-324335c77eba?auto=format&fit=crop&w=600&q=80"
     };
 
-    // LOCAL STORAGE FOR CUSTOM UPLOADED IMAGES
     function getCustomImages() {
       try {
         return JSON.parse(localStorage.getItem('tambahkata_custom_images')) || {};
@@ -365,7 +355,7 @@
     }
 
     // STATE MANAGEMENT
-    let currentMode = null; // 'pemahaman' | 'ekspresif'
+    let currentMode = null;
     let currentIndex = 0;
     let completedCount = 0;
     let correctCount = 0;
@@ -377,7 +367,18 @@
     let isAudioEnabled = true;
     let activeUploadKey = null;
 
-    // AUDIO SYNTHESIS & TTS
+    // TTS BAHASA MELAYU BAKU
+    let availableVoices = [];
+    function loadVoices() {
+      if ('speechSynthesis' in window) {
+        availableVoices = window.speechSynthesis.getVoices();
+      }
+    }
+    if ('speechSynthesis' in window) {
+      loadVoices();
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
     function toggleAudioSetting() {
       isAudioEnabled = !isAudioEnabled;
       const btn = document.getElementById('sound-toggle-btn');
@@ -399,9 +400,17 @@
       if ('speechSynthesis' in window) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
+        
+        // Pilihan khusus untuk suara Bahasa Melayu (ms-MY / ms)
         utterance.lang = 'ms-MY';
-        utterance.rate = 0.85; 
-        utterance.pitch = 1.1; 
+        const malayVoice = availableVoices.find(v => v.lang.startsWith('ms') || v.lang.includes('MY'));
+        if (malayVoice) {
+          utterance.voice = malayVoice;
+        }
+
+        utterance.rate = 0.85; // Sebutan lebih perlahan & padat
+        utterance.pitch = 1.0;  // Ton semula jadi Baku
+
         if (callback) utterance.onend = callback;
         window.speechSynthesis.speak(utterance);
       } else if(callback) {
@@ -436,7 +445,6 @@
       }
     }
 
-    // SENARAI PUJIAN BAHASA MELAYU STANDARD SEPENUHNYA
     const praises = ["Hebat!", "Pandai!", "Syabas!", "Bagus!", "Bijak!", "Tahniah!", "Terbaik!", "Cemerlang!"];
     function getRandomPraise() {
       return praises[Math.floor(Math.random() * praises.length)];
@@ -605,7 +613,7 @@
       }
     }
 
-    // PENGURUSAN GAMBAR (NO CROPPING / ASPECT RATIO CONTAIN)
+    // PENGURUSAN GAMBAR
     function openImageManager() {
       stopSpeechRecognition();
       document.getElementById('screen-home').classList.add('hidden');
@@ -683,7 +691,6 @@
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         
-        // Simpan nisbah asal gambar
         const maxDim = 600;
         let width = img.width;
         let height = img.height;
